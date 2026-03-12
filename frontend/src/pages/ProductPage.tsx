@@ -4,12 +4,13 @@ import { Product } from '../models/Product';
 import { ProductType } from '../models/ProductType';
 
 const Products = ({productType} : {productType: ProductType}) => {
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3002';
   const [listOfproducts, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get<Product[]>('http://localhost:3001/get-products-by-category?productType=' + productType);
+        const response = await axios.get<Product[]>(`${BACKEND_URL}/get-products-by-category?productType=${productType}`);
         const products = response.data.map(item => new Product(item.productType, item.title, item.imageUrl, item.basePrice));
         setProducts(products);
       } catch (error) {
