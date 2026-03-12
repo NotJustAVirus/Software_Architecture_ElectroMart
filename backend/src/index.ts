@@ -1,5 +1,8 @@
+import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import { recommendedProducts } from './dummyData';
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT ?? 3001;
@@ -32,10 +35,13 @@ app.get("/get-products-by-category", (req: Request, res: Response) => {
   return res.json(products);
 });
 
-app.get("/unfinished-feature", (_: Request, res: Response) => {
-  // Oh no, this feature is not ready for production!
-  return res.status(500).send('Internal Server Error');
-});
+console.log(process.env.FEATURE_UNFINISHED);
+if (process.env.FEATURE_UNFINISHED === 'true') {
+  app.get("/unfinished-feature", (_: Request, res: Response) => {
+    // Oh no, this feature is not ready for production!
+    return res.status(500).send('Internal Server Error');
+  });
+}
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
